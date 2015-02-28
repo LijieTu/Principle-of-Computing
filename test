@@ -1,0 +1,40 @@
+coordinates = []
+
+for x in range(11):
+  for y in range(11):
+    coordinates.append([x, y])
+    
+# print coordinates
+
+
+list1 = ['hello', 'goodbye']
+list2 = ['a', 'b']
+cc=dict(zip(list1,list2))
+
+UP=1
+DOWN=2
+LEFT=3
+RIGHT=4
+
+dic_ini={UP:[],
+         DOWN:[],
+         LEFT:[],
+         RIGHT:[]}
+
+for dummy_col in xrange(4):
+    dic_ini[UP].append((0,dummy_col))
+    dic_ini[DOWN].append((3,dummy_col))
+            
+for dummy_row in xrange(5):
+    dic_ini[LEFT].append((dummy_row,0))
+    dic_ini[RIGHT].append((dummy_row,3))
+
+#print len(dic_ini)
+
+list1=[(1,2),(2,8)]
+list2=[(1,2),(3,2)]
+list3=[(2,3),(6,5)]
+list=list1+list2
+
+#print list
+print list3[0][1]
