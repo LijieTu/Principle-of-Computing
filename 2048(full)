@@ -141,10 +141,10 @@ class TwentyFortyEight:
             row=start_list[0][0]
             col=start_list[0][1]
             
-            print "initial_head_list is ",ini_list
-            print "start_list is",start_list
-            print "self.grid is ",self._grid
-            print "row and col are ",row,col
+            # print "initial_head_list is ",ini_list
+            # print "start_list is",start_list
+            # print "self.grid is ",self._grid
+            # print "row and col are ",row,col
             
             before_merge.append(self._grid[row][col])
             
@@ -181,8 +181,8 @@ class TwentyFortyEight:
                 
                 
                 
-               
-                print self._grid
+                
+               #print self._grid
                 
                 
                 self._grid[row][col]=after_merge[dummy_j]
