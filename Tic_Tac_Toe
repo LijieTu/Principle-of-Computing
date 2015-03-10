@@ -1,0 +1,165 @@
+"""
+Monte Carlo Tic-Tac-Toe Player
+"""
+
+import random
+import poc_ttt_gui
+import poc_ttt_provided as provided
+
+EMPTY = 1
+PLAYERX = 2
+PLAYERO = 3 
+DRAW = 4
+
+
+# Constants for Monte Carlo simulator
+# You may change the values of these constants as desired, 
+# but do not change their names.
+
+NTRIALS = 100         # Number of trials to run
+SCORE_CURRENT = 1.0   # Score for squares played by the current player
+SCORE_OTHER = 1.0     # Score for squares played by the other player
+    
+def mc_trial(board, player):
+    """
+    Make random moves and alternate between two players. 
+    Return the modified board when the game is over
+    """
+    
+    while (board.check_win()== None): 
+        avail=board.get_empty_squares()
+        #avail=list(avail)
+        num=random.randrange(len(avail))
+        #print len(avail),"length of avail"
+        #print num,"num"
+        board.move(avail[num][0],avail[num][1],player)
+        player=provided.switch_player(player)
+    
+    #print board
+    
+    return 
+    
+
+def mc_update_scores(scores, board, player):
+    """
+    Take a grid of scores and update it
+    """
+    if board.check_win() == DRAW:
+        return
+    elif board.check_win() == PLAYERX:
+        flag = 1
+    elif board.check_win() == PLAYERO:
+        flag = -1
+    else:
+        print "It is not over yet!\n"
+    
+    for row in range(board.get_dim()):
+        for col in range(board.get_dim()):
+            if board.square(row,col) == EMPTY:
+                continue
+            elif board.square(row,col) == PLAYERX:
+                scores[row][col]+=SCORE_CURRENT*flag
+            elif board.square(row,col) == PLAYERO:
+                scores[row][col]-=SCORE_OTHER*flag
+            else:
+                print "It is not over!\n"
+                
+            
+def get_best_move(board, scores):
+    
+    """
+    get the best move on the board based on the Monte Carlo
+    simulation result
+    """
+    
+    if board.get_empty_squares()==[]:
+        print "ERROR! It is full 1!"
+        return 
+    avail=board.get_empty_squares()
+    
+    
+    max_num=scores[avail[0][0]][avail[0][1]]
+    times=0
+    max_list=[]
+    for step in range(len(avail)):
+        now = scores[avail[step][0]][avail[step][1]]
+        if now>max_num:
+            max_num=now
+            max_list=[(avail[step][0],avail[step][1])]
+            times=0
+        elif now<max_num:
+            continue
+        elif now==max_num:
+            max_list.append((avail[step][0],avail[step][1]))
+            times=+1
+            
+            
+            
+    
+    #print times, "times"
+    #print len(max_list),"max_list_length"
+    
+    if times>=1:
+        num = random.randrange(times)
+        #print times,"times"
+    elif times==0:
+        num=0
+        
+    #print num,"num"
+    #print max_list
+    max_list=max_list[num]
+    #print max_list
+    #print max_list[0]
+        
+    max_tup=tuple(max_list)
+    #print max_tup,"max_tup"
+    #print type(max_tup)
+        
+    return tuple(max_tup)
+
+
+def mc_move(board, player, trials):
+    
+    """
+    Join all the functions together to play the game
+    """
+    
+    if board.get_empty_squares()==[]:
+        print "ERROR! It is full 2!"
+        return  
+    
+    scores = [[0 for dummy_col in range(board.get_dim())]
+                     for dummy_row in range(board.get_dim())]
+    
+    clone=board.clone()
+    #acc=0
+    
+    for dummy_step in range(trials):
+        clone=board.clone()
+        mc_trial(clone,player)
+        mc_update_scores(scores,clone,player)
+        #acc+=1
+    
+    bst=get_best_move(board,scores)
+    player=provided.switch_player(player)
+    
+    #print "bst=", bst
+    #print "bst[0]",bst[0]
+    #print "bst[1]",bst[1]
+    #print scores
+   
+    
+    return bst    
+    
+#print "test"
+#print get_best_move(provided.TTTBoard(2, False, [[EMPTY, EMPTY], [EMPTY, EMPTY]]), [[0, 0], [3, 0]]) 
+#print mc_move(provided.TTTBoard(3, False, [[PLAYERX, EMPTY, EMPTY], [PLAYERO, PLAYERO, EMPTY], [EMPTY, PLAYERX, EMPTY]]), PLAYERX, NTRIALS)
+
+
+
+# Test game with the console or the GUI.  Uncomment whichever 
+# you prefer.  Both should be commented out when you submit 
+# for testing to save time.
+
+#provided.play_game(mc_move, 100, False) 
+#poc_ttt_gui.run_gui(3, provided.PLAYERX, mc_move, 100, False)
