@@ -62,3 +62,7 @@ class BuildInfo:
         Return a clone of this BuildInfo
         """
         return BuildInfo(self._info, self._build_growth)
+
+"""
+http://www.codeskulptor.org/#poc_clicker_provided.py
+"""
